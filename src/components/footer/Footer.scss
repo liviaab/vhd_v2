@@ -1,0 +1,9 @@
+@import '../assets/stylesheets/colors.scss';
+
+.footer_wrapper {
+  background-color: $beryl-green;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

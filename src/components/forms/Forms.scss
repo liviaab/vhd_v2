@@ -1,0 +1,31 @@
+@import '../assets/stylesheets/colors.scss';
+
+.forms_wrapper {
+  display: flex;
+  flex-flow: column;
+  background-color: $beryl-green;
+  padding: 10px 0;
+
+  .data_wrapper {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+    align-items: center;
+
+    div {
+      width: 40%;
+      display: flex;
+      flex-flow: column;
+    }
+
+    &__channel {
+      height: 100px;
+      justify-content: space-evenly;
+    }
+  }
+
+  button {
+    width: 150px;
+    align-self: center;
+  }
+}

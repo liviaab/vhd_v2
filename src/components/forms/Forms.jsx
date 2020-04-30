@@ -1,20 +1,68 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Button, FormField, TextInput, TextInputField } from 'evergreen-ui'
+import Prior from '../../hooks/use-prior'
 import './Forms.scss'
 
+// falta validar o form 1/3 1/3 1/3
+
 export default function Forms() {
+  const [ setPriorString, priorNumbers, priorShannonEntropy ] = Prior()
+
+  const [formPrior, setFormPrior] = useState('')
+  const [channel1stEntry, setChannel1stEntry] = useState('')
+  const [channel2ndEntry, setChannel2ndEntry] = useState('')
+  const [channel3rdEntry, setChannel3rdEntry] = useState('')
+
   return (
-    <div className="forms_wrapper">
-      <div className="data_wrapper">
-        <div className="data_wrapper__prior">
-          <input type="text" placeholder="Prior" id="prior-input" />
+    <div>
+      <FormField
+        className="forms_wrapper"
+        label=""
+        hint="Use numbers (0 or 1) or fractions (e.g. 1/3, 1/7, 1/2...) separated by spaces"
+      >
+        <div className="data_wrapper">
+          <div className="data_wrapper__prior">
+            <TextInputField
+              label="Prior"
+              id="prior-input"
+              isInvalid={false}
+              onChange={e => setFormPrior(e.target.value)}
+            />
+          </div>
+          <div className="data_wrapper__channel">
+            <TextInputField
+              label="Channel"
+              id="channel-input-1"
+              isInvalid={false}
+              onChange={e => setChannel1stEntry(e.target.value)}
+            />
+            <TextInputField
+              label=""
+              id="channel-input-2"
+              isInvalid={false}
+              onChange={e => setChannel2ndEntry(e.target.value)}
+            />
+            <TextInputField
+              label=""
+              id="channel-input-3"
+              isInvalid={false}
+              onChange={e => setChannel3rdEntry(e.target.value)}
+            />
+          </div>
         </div>
-        <div className="data_wrapper__channel">
-          <input type="text" placeholder="Channel" id="channel-input-1" />
-          <input type="text" placeholder="Channel" id="channel-input-2" />
-          <input type="text" placeholder="Channel" id="channel-input-3" />
-        </div>
+        <Button
+          height={32}
+          className="action_button"
+          onClick={() => setPriorString(formPrior)}
+        >
+          Calculate!
+        </Button>
+      </FormField>
+      <div className="charts">
+        {priorNumbers.join(' ')}
+        <br/>
+        {priorShannonEntropy}
       </div>
-      <button type="button">Calculate!</button>
     </div>
   )
 }

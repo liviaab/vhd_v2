@@ -1,17 +1,30 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, FormField, TextInput, TextInputField } from 'evergreen-ui'
-import Prior from '../../hooks/use-prior'
+import { Engine } from '../../hooks'
 import './Forms.scss'
 
+
 // falta validar o form 1/3 1/3 1/3
-
 export default function Forms() {
-  const [ setPriorString, priorNumbers, priorShannonEntropy ] = Prior()
-
   const [formPrior, setFormPrior] = useState('')
   const [channel1stEntry, setChannel1stEntry] = useState('')
   const [channel2ndEntry, setChannel2ndEntry] = useState('')
   const [channel3rdEntry, setChannel3rdEntry] = useState('')
+  const [
+    setPrior,
+    setChannel,
+    priorShannonEntropy,
+    jointDistribution,
+    marginalDistribution,
+    hyperDistibution,
+    hyperMarginalDistribution
+  ] = Engine()
+
+  const executeEffects = () => {
+    setPrior(formPrior)
+    const channelFromInputs = [channel1stEntry, channel2ndEntry, channel3rdEntry]
+    setChannel(channelFromInputs)
+  }
 
   return (
     <div>
@@ -53,15 +66,24 @@ export default function Forms() {
         <Button
           height={32}
           className="action_button"
-          onClick={() => setPriorString(formPrior)}
+          onClick={executeEffects}
         >
           Calculate!
         </Button>
       </FormField>
       <div className="charts">
-        {priorNumbers.join(' ')}
         <br/>
-        {priorShannonEntropy}
+        Entropia de Shannon da entrada: {priorShannonEntropy}
+        <br/>
+        <br/>
+        Joint: {jointDistribution}
+        <br/>
+        Marginal: {marginalDistribution}
+        <br/>
+        Hyper: {hyperDistibution}
+        <br/>
+        Hyper prob: {hyperMarginalDistribution}
+        <br/>
       </div>
     </div>
   )

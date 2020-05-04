@@ -3,22 +3,32 @@ import { useState, useEffect } from 'react'
 
 const logBase2 = number => Math.log( 1/number ) / Math.log(2)
 
+const splitProbabilitiesWithoutBlankSpaces = (number) => {
+  return number.split(/(\s+)/).filter( e => e.trim().length > 0)
+}
+
 export default function Prior() {
   const [priorString, setPriorString] = useState('')
-  const [priorNumbers, setPriorNumbers] = useState([])
+  const [priorProbabilities, setPriorProbabilities] = useState([])
   const [priorShannonEntropy, setPriorShannonEntropy] = useState(0)
 
   useEffect(() => {
-    const listOfNumbers = priorString.split(" ").map(number => evaluate(number))
-    setPriorNumbers(listOfNumbers)
+    console.log(priorString, typeof(priorString));
+    if (priorString) {
+      const trimmedPrior = splitProbabilitiesWithoutBlankSpaces(priorString)
+      console.log(trimmedPrior, typeof(trimmedPrior[0]));
+
+      const listOfProbabilities = trimmedPrior.map(number => evaluate(number))
+      setPriorProbabilities(listOfProbabilities)
+    }
   }, [priorString])
 
   useEffect(() => {
-    if(priorNumbers.length !== 0) {
-      const entropy = priorNumbers.reduce( (acc, current) => current * logBase2(current))
+    if(priorProbabilities.length !== 0) {
+      const entropy = priorProbabilities.reduce( (acc, current) => current * logBase2(current))
       setPriorShannonEntropy(entropy)
     }
-  }, [priorNumbers])
+  }, [priorProbabilities])
 
-  return [setPriorString, priorNumbers, priorShannonEntropy]
+  return [setPriorString, priorProbabilities, priorShannonEntropy]
 }

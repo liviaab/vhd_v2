@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { Button, FormField, TextInput, TextInputField } from 'evergreen-ui'
+import React, { useState } from 'react'
+import { Button, FormField, TextInputField } from 'evergreen-ui'
 import { Engine } from '../../hooks'
+import Array from '../array/Array'
+import Matrix from '../matrix/Matrix'
 import './Forms.scss'
 
 
@@ -16,6 +18,7 @@ export default function Forms() {
     priorShannonEntropy,
     jointDistribution,
     marginalDistribution,
+    posteriorDistribution,
     hyperDistibution,
     hyperMarginalDistribution
   ] = Engine()
@@ -73,12 +76,19 @@ export default function Forms() {
       </FormField>
       <div className="charts">
         <br/>
-        Entropia de Shannon da entrada: {priorShannonEntropy}
+        Entropia de Shannon da entrada:
+        <Array values={[priorShannonEntropy]} />
         <br/>
         <br/>
-        Joint: {jointDistribution}
+        Joint:
+        <Matrix values={jointDistribution} decimals={2} />
         <br/>
-        Marginal: {marginalDistribution}
+        Marginal:
+        <Array values={marginalDistribution} />
+
+        <br/>
+        posterior:
+        <Matrix values={posteriorDistribution} />
         <br/>
         Hyper: {hyperDistibution}
         <br/>

@@ -1,4 +1,3 @@
-import { evaluate } from 'mathjs'
 import { useState, useEffect } from 'react'
 import { Channel, Prior } from './'
 
@@ -18,16 +17,15 @@ export default function Engine() {
 
   const [ jointDistribution, setJointDistribution ] = useState([])
   const [ marginalDistribution, setMarginalDistribution ] = useState([])
+  const [ posteriorDistribution, setPosteriorDistribution ] = useState([])
   const [ hyperDistribution, setHyperDistribution ] = useState([])
   const [ hyperMarginalDistribution, setHyperMarginalDistribution ] = useState([])
 
   // Calculate Joint Distribution
   useEffect(() =>{
-    console.log(priorProbabilities, channelProbabilities, jointDistribution);
     if(priorProbabilities && priorProbabilities.length !== 0 && channelProbabilities && channelProbabilities.length !== 0) {
       const jointDistribution = multiply(priorProbabilities, channelProbabilities)
       setJointDistribution(jointDistribution)
-      console.log(priorProbabilities, channelProbabilities, jointDistribution);
     }
   }, [priorProbabilities, channelProbabilities])
 
@@ -44,6 +42,18 @@ export default function Engine() {
     setMarginalDistribution(marginalDist)
   }, [jointDistribution])
 
+  useEffect(() => {
+     let posteriorDistribution = []
+
+     jointDistribution.forEach((jointLine, lineIndex) => {
+       let posteriorLine = jointLine.map((value, index) => value * marginalDistribution[index])
+       posteriorDistribution.push(posteriorLine)
+     })
+
+     setPosteriorDistribution(posteriorDistribution)
+
+  }, [jointDistribution, marginalDistribution])
+
   // Calculate Hyper Distribution
   useEffect(() => {
     if (!jointDistribution || jointDistribution.length === 0) {
@@ -52,15 +62,31 @@ export default function Engine() {
 
 
 
+
   }, [jointDistribution])
+
+  // Calculate Hyper Marginal Distribution
+
+  useEffect(() => {
+    if (!hyperDistribution || hyperDistribution.length === 0) {
+      return
+    }
+
+    const initialValue = Array(hyperDistribution[0].length).fill(0)
+    const marginalDist = hyperDistribution.reduce((acc, current) => {
+      return acc.map((elem, index) => elem + current[index])
+    }, initialValue)
+    setHyperMarginalDistribution(marginalDist)
+  }, [hyperDistribution])
+
   return [
     setPriorString,
     setChannelString,
     priorShannonEntropy,
     jointDistribution,
-    marginalDistribution
-    //,
-    // hyperDistibution,
-    // hyperMarginalDistribution
+    marginalDistribution,
+    posteriorDistribution,
+    hyperDistribution,
+    hyperMarginalDistribution
   ]
 }

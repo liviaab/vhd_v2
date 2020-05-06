@@ -13,11 +13,8 @@ export default function Prior() {
   const [priorShannonEntropy, setPriorShannonEntropy] = useState(0)
 
   useEffect(() => {
-    console.log(priorString, typeof(priorString));
     if (priorString) {
       const trimmedPrior = splitProbabilitiesWithoutBlankSpaces(priorString)
-      console.log(trimmedPrior, typeof(trimmedPrior[0]));
-
       const listOfProbabilities = trimmedPrior.map(number => evaluate(number))
       setPriorProbabilities(listOfProbabilities)
     }

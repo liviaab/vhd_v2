@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Header, Description, Forms, Results, Footer } from './components'
+import { Header, Description, Forms, Footer } from './components'
 
 function App() {
   return (
@@ -7,7 +7,6 @@ function App() {
       <Header/>
       <Description/>
       <Forms/>
-      <Results/>
       <Footer/>
     </Fragment>
   );

@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Channel, Prior } from './'
-
-
-const multiply = (prior, channel) => {
-  let jointDistribution = []
-  prior.forEach((priorValue, priorIndex) => {
-    let resultLine = channel[priorIndex].map(channelValue => channelValue * priorValue)
-    jointDistribution.push(resultLine)
-  })
-  return jointDistribution
-}
+import {
+  columnsOfZeroes,
+  columnsOfMultiples,
+  hasInvalidValues,
+  removeColumns
+} from '../matrix_operations/operations'
 
 export default function Engine() {
   const [ setChannelString, channelProbabilities ] = Channel()
@@ -22,8 +18,10 @@ export default function Engine() {
   const [ hyperMarginalDistribution, setHyperMarginalDistribution ] = useState([])
 
   // Calculate Joint Distribution
-  useEffect(() =>{
-    if(priorProbabilities && priorProbabilities.length !== 0 && channelProbabilities && channelProbabilities.length !== 0) {
+  useEffect(() => {
+    if(priorProbabilities && priorProbabilities.length !== 0
+        && channelProbabilities && channelProbabilities.length !== 0
+        && !hasInvalidValues(channelProbabilities)) {
       const jointDistribution = multiply(priorProbabilities, channelProbabilities)
       setJointDistribution(jointDistribution)
     }
@@ -31,7 +29,7 @@ export default function Engine() {
 
   // Calculate Marginal Distribution
   useEffect(() => {
-    if (!jointDistribution || jointDistribution.length === 0) {
+    if (!jointDistribution || jointDistribution.length === 0 || hasInvalidValues(jointDistribution)) {
       return
     }
 
@@ -42,33 +40,39 @@ export default function Engine() {
     setMarginalDistribution(marginalDist)
   }, [jointDistribution])
 
+  // Calculate posterior Distribution
   useEffect(() => {
-     let posteriorDistribution = []
+    if(!jointDistribution || hasInvalidValues(jointDistribution)
+        || !marginalDistribution || marginalDistribution.length === 0) {
+      return
+    }
 
-     jointDistribution.forEach((jointLine, lineIndex) => {
-       let posteriorLine = jointLine.map((value, index) => value * marginalDistribution[index])
-       posteriorDistribution.push(posteriorLine)
-     })
-
-     setPosteriorDistribution(posteriorDistribution)
-
+   let posterior = []
+   jointDistribution.forEach((jointLine, lineIndex) => {
+     let posteriorLine = jointLine.map((value, index) => value * marginalDistribution[index])
+     posterior.push(posteriorLine)
+   })
+   setPosteriorDistribution(posterior)
   }, [jointDistribution, marginalDistribution])
 
   // Calculate Hyper Distribution
   useEffect(() => {
-    if (!jointDistribution || jointDistribution.length === 0) {
+    if (!posteriorDistribution || posteriorDistribution.length === 0 || hasInvalidValues(posteriorDistribution)) {
       return
     }
 
+    let columnsToRemove = []
+    columnsToRemove.push(columnsOfZeroes(posteriorDistribution))
+    columnsToRemove.push(columnsOfMultiples(posteriorDistribution))
+    columnsToRemove = columnsToRemove.flat()
 
-
-
-  }, [jointDistribution])
+    const hyper = removeColumns(posteriorDistribution, columnsToRemove)
+    setHyperDistribution(hyper)
+  }, [posteriorDistribution])
 
   // Calculate Hyper Marginal Distribution
-
   useEffect(() => {
-    if (!hyperDistribution || hyperDistribution.length === 0) {
+    if (!hyperDistribution || hyperDistribution.length === 0 || hasInvalidValues(hyperDistribution)) {
       return
     }
 
@@ -89,4 +93,14 @@ export default function Engine() {
     hyperDistribution,
     hyperMarginalDistribution
   ]
+}
+
+const multiply = (prior, channel) => {
+  let jointDistribution = []
+  prior.forEach((priorValue, priorIndex) => {
+    let resultLine = channel[priorIndex].map(channelValue => channelValue * priorValue)
+    jointDistribution.push(resultLine)
+  })
+
+  return jointDistribution
 }

@@ -24,9 +24,13 @@ export default function Forms() {
   ] = Engine()
 
   const executeEffects = () => {
-    setPrior(formPrior)
-    const channelFromInputs = [channel1stEntry, channel2ndEntry, channel3rdEntry]
-    setChannel(channelFromInputs)
+    try {
+      setPrior(formPrior)
+      const channelFromInputs = [channel1stEntry, channel2ndEntry, channel3rdEntry]
+      setChannel(channelFromInputs)
+    } catch {
+      alert("Verifique as informacoes do formulario")
+    }
   }
 
   return (
@@ -76,21 +80,19 @@ export default function Forms() {
       </FormField>
       <div className="charts">
         <br/>
-        Entropia de Shannon da entrada:
-        <Array values={[priorShannonEntropy]} />
-        <br/>
+        Entropia de Shannon da entrada:{priorShannonEntropy}
         <br/>
         Joint:
         <Matrix values={jointDistribution} decimals={2} />
         <br/>
         Marginal:
         <Array values={marginalDistribution} />
-
         <br/>
         posterior:
         <Matrix values={posteriorDistribution} />
         <br/>
-        Hyper: {hyperDistibution}
+        Hyper:
+        <Matrix values={hyperDistibution} />
         <br/>
         Hyper prob: {hyperMarginalDistribution}
         <br/>

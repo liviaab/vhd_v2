@@ -9,7 +9,7 @@ const Matrix = ({values, decimals = 3}) => {
 
   return (
     <div>
-      {values.map(row => <p>{row.join('  ')}</p>)}
+      {values.map((row, index) => <p key={"matrix-row-" + index}>{row.join('  ')}</p>)}
     </div>
   )
 }

@@ -10,7 +10,7 @@ const splitProbabilitiesWithoutBlankSpaces = (number) => {
 export default function Prior() {
   const [priorString, setPriorString] = useState('')
   const [priorProbabilities, setPriorProbabilities] = useState([])
-  const [priorShannonEntropy, setPriorShannonEntropy] = useState(0)
+  const [priorShannonEntropy, setPriorShannonEntropy] = useState()
 
   useEffect(() => {
     if (priorString) {
@@ -23,7 +23,7 @@ export default function Prior() {
   useEffect(() => {
     if(priorProbabilities.length !== 0) {
       const entropy = priorProbabilities.reduce( (acc, current) => current * logBase2(current))
-      setPriorShannonEntropy(entropy)
+        setPriorShannonEntropy(entropy)
     }
   }, [priorProbabilities])
 

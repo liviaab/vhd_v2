@@ -1,14 +1,14 @@
-import React, { Fragment } from 'react'
-import { Header, Description, Forms, Footer } from './components'
+import React from 'react'
+import { Header, Forms, Footer } from './components'
+import './App.scss'
 
 function App() {
   return (
-    <Fragment>
+    <main>
       <Header/>
-      <Description/>
       <Forms/>
       <Footer/>
-    </Fragment>
+    </main>
   );
 }
 

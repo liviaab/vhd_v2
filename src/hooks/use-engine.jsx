@@ -7,13 +7,34 @@ import {
   removeColumns
 } from '../matrix_operations/operations'
 
+
+const multiply = (prior, channel) => {
+  let jointDistribution = []
+  prior.forEach((priorValue, priorIndex) => {
+    let resultLine = channel[priorIndex].map(channelValue => channelValue * priorValue)
+    jointDistribution.push(resultLine)
+  })
+
+  return jointDistribution
+}
+
+const calculateMatrixDistribution = (matrix) => {
+  const initialValue = Array(matrix[0].length).fill(0)
+  const marginalDistribution = matrix.reduce((acc, current) => {
+    return acc.map((elem, index) => elem + current[index])
+  }, initialValue)
+
+  return marginalDistribution
+}
+
 export default function Engine() {
   const [ setChannelString, channelProbabilities ] = Channel()
   const [ setPriorString, priorProbabilities, priorShannonEntropy ] = Prior()
 
   const [ jointDistribution, setJointDistribution ] = useState([])
-  const [ marginalDistribution, setMarginalDistribution ] = useState([])
+  const [ jointMarginalDistribution, setJointMarginalDistribution ] = useState([])
   const [ posteriorDistribution, setPosteriorDistribution ] = useState([])
+  const [ posteriorMarginalDistribution, setPosteriorMarginalDistribution ] = useState([])
   const [ hyperDistribution, setHyperDistribution ] = useState([])
   const [ hyperMarginalDistribution, setHyperMarginalDistribution ] = useState([])
 
@@ -33,27 +54,34 @@ export default function Engine() {
       return
     }
 
-    const initialValue = Array(jointDistribution[0].length).fill(0)
-    const marginalDist = jointDistribution.reduce((acc, current) => {
-      return acc.map((elem, index) => elem + current[index])
-    }, initialValue)
-    setMarginalDistribution(marginalDist)
+    const marginalDistribution = calculateMatrixDistribution(jointDistribution)
+    setJointMarginalDistribution(marginalDistribution)
   }, [jointDistribution])
 
-  // Calculate posterior Distribution
+  // Calculate Posterior Distribution
   useEffect(() => {
     if(!jointDistribution || hasInvalidValues(jointDistribution)
-        || !marginalDistribution || marginalDistribution.length === 0) {
+        || !jointMarginalDistribution || jointMarginalDistribution.length === 0) {
       return
     }
 
    let posterior = []
    jointDistribution.forEach((jointLine, lineIndex) => {
-     let posteriorLine = jointLine.map((value, index) => value * marginalDistribution[index])
+     let posteriorLine = jointLine.map((value, index) => value * jointMarginalDistribution[index])
      posterior.push(posteriorLine)
    })
    setPosteriorDistribution(posterior)
-  }, [jointDistribution, marginalDistribution])
+ }, [jointDistribution, jointMarginalDistribution])
+
+  // Calculate Posterior Marginal Distribution
+  useEffect(() => {
+    if (!posteriorDistribution || posteriorDistribution.length === 0 || hasInvalidValues(posteriorDistribution)) {
+      return
+    }
+
+    const marginalDistribution = calculateMatrixDistribution(posteriorDistribution)
+    setPosteriorMarginalDistribution(marginalDistribution)
+  }, [posteriorDistribution])
 
   // Calculate Hyper Distribution
   useEffect(() => {
@@ -76,11 +104,8 @@ export default function Engine() {
       return
     }
 
-    const initialValue = Array(hyperDistribution[0].length).fill(0)
-    const marginalDist = hyperDistribution.reduce((acc, current) => {
-      return acc.map((elem, index) => elem + current[index])
-    }, initialValue)
-    setHyperMarginalDistribution(marginalDist)
+    const marginalDistribution = calculateMatrixDistribution(hyperDistribution)
+    setHyperMarginalDistribution(marginalDistribution)
   }, [hyperDistribution])
 
   return [
@@ -88,19 +113,10 @@ export default function Engine() {
     setChannelString,
     priorShannonEntropy,
     jointDistribution,
-    marginalDistribution,
+    jointMarginalDistribution,
     posteriorDistribution,
+    posteriorMarginalDistribution,
     hyperDistribution,
     hyperMarginalDistribution
   ]
-}
-
-const multiply = (prior, channel) => {
-  let jointDistribution = []
-  prior.forEach((priorValue, priorIndex) => {
-    let resultLine = channel[priorIndex].map(channelValue => channelValue * priorValue)
-    jointDistribution.push(resultLine)
-  })
-
-  return jointDistribution
 }

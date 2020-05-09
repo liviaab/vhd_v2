@@ -1,0 +1,14 @@
+@import '../assets/stylesheets/colors.scss';
+
+.intermediate-calculations {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-evenly;
+  width: 70%;
+
+  .matrices-and-marginals {
+      display: flex;
+      flex-flow: row;
+      justify-content: space-evenly;
+  }
+}

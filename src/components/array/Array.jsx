@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 
 const Array = ({values, decimals = 3}) => {
-  if (values.length === 0) {
+  if (!values || values.length === 0) {
     return <Fragment />
   }
 

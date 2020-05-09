@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { Button, FormField, TextInputField } from 'evergreen-ui'
 import { Engine } from '../../hooks'
-import Array from '../array/Array'
-import Matrix from '../matrix/Matrix'
+import Results from '../results/Results'
 import './Forms.scss'
 
 
-// falta validar o form 1/3 1/3 1/3
+// 1/3 1/3 1/3
 export default function Forms() {
   const [formPrior, setFormPrior] = useState('')
   const [channel1stEntry, setChannel1stEntry] = useState('')
@@ -17,31 +16,28 @@ export default function Forms() {
     setChannel,
     priorShannonEntropy,
     jointDistribution,
-    marginalDistribution,
+    jointMarginalDistribution,
     posteriorDistribution,
-    hyperDistibution,
+    posteriorMarginalDistribution,
+    hyperDistribution,
     hyperMarginalDistribution
   ] = Engine()
 
   const executeEffects = () => {
-    try {
-      setPrior(formPrior)
-      const channelFromInputs = [channel1stEntry, channel2ndEntry, channel3rdEntry]
-      setChannel(channelFromInputs)
-    } catch {
-      alert("Verifique as informacoes do formulario")
-    }
+    setPrior(formPrior)
+    const channelFromInputs = [channel1stEntry, channel2ndEntry, channel3rdEntry]
+    setChannel(channelFromInputs)
   }
 
   return (
-    <div>
+    <div className="main_container">
       <FormField
         className="forms_wrapper"
         label=""
         hint="Use numbers (0 or 1) or fractions (e.g. 1/3, 1/7, 1/2...) separated by spaces"
       >
-        <div className="data_wrapper">
-          <div className="data_wrapper__prior">
+        <div className="input_data_wrapper">
+          <div className="input_data_wrapper__prior">
             <TextInputField
               label="Prior"
               id="prior-input"
@@ -49,7 +45,7 @@ export default function Forms() {
               onChange={e => setFormPrior(e.target.value)}
             />
           </div>
-          <div className="data_wrapper__channel">
+          <div className="input_data_wrapper__channel">
             <TextInputField
               label="Channel"
               id="channel-input-1"
@@ -78,25 +74,17 @@ export default function Forms() {
           Calculate!
         </Button>
       </FormField>
-      <div className="charts">
-        <br/>
-        Entropia de Shannon da entrada:{priorShannonEntropy}
-        <br/>
-        Joint:
-        <Matrix values={jointDistribution} decimals={2} />
-        <br/>
-        Marginal:
-        <Array values={marginalDistribution} />
-        <br/>
-        posterior:
-        <Matrix values={posteriorDistribution} />
-        <br/>
-        Hyper:
-        <Matrix values={hyperDistibution} />
-        <br/>
-        Hyper prob: {hyperMarginalDistribution}
-        <br/>
-      </div>
+
+      <Results
+        priorShannonEntropy={priorShannonEntropy}
+        jointDistribution={jointDistribution}
+        jointMarginalDistribution={jointMarginalDistribution}
+        posteriorDistribution={posteriorDistribution}
+        posteriorMarginalDistribution={posteriorMarginalDistribution}
+        hyperDistibution={hyperDistribution}
+        hyperMarginalDistribution={hyperMarginalDistribution}
+        decimals={3}
+      />
     </div>
   )
 }

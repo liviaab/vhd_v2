@@ -1,4 +1,3 @@
-
 const hasInvalidValues = (channel) => {
   channel.forEach(row => {
     row.forEach(element => {

@@ -22,6 +22,7 @@ export default function Results({
         <pre>{ priorShannonEntropy ? priorShannonEntropy.toFixed(decimals) : null }</pre>
       </div>
       <br/>
+      <br/>
       <div className="matrices-and-marginals">
         <div>
           Joint:
@@ -30,7 +31,8 @@ export default function Results({
           Joint Marginal:
           <Array values={jointMarginalDistribution} decimals={decimals} />
         </div>
-
+        <br/>
+        <br/>
         <div>
           Posterior:
           <Matrix values={posteriorDistribution} decimals={decimals} />
@@ -38,7 +40,8 @@ export default function Results({
           Posterior Marginal:
           <Array values={jointMarginalDistribution} decimals={decimals} />
         </div>
-
+        <br/>
+        <br/>
         <div>
           Hyper:
           <Matrix values={hyperDistibution} decimals={decimals} />

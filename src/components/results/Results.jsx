@@ -19,8 +19,9 @@ export default function Results({
     <div className="intermediate-calculations" style={{color: defaultTheme.colors.text.default}}>
       <div> Prior's Shannon Entropy:
         <br/>
-        { priorShannonEntropy ? priorShannonEntropy.toFixed(decimals) : null }
+        <pre>{ priorShannonEntropy ? priorShannonEntropy.toFixed(decimals) : null }</pre>
       </div>
+      <br/>
       <div className="matrices-and-marginals">
         <div>
           Joint:

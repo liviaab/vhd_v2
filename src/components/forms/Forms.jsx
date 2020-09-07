@@ -4,7 +4,6 @@ import { Engine } from '../../hooks'
 import Results from '../results/Results'
 import './Forms.scss'
 
-
 // 1/3 1/3 1/3
 export default function Forms() {
   const [formPrior, setFormPrior] = useState('')
@@ -22,11 +21,26 @@ export default function Forms() {
     hyperDistribution,
     hyperMarginalDistribution
   ] = Engine()
+  const [results, showResults] = useState(false)
+
+  const resultsComponent = (
+    <Results
+      priorShannonEntropy={priorShannonEntropy}
+      jointDistribution={jointDistribution}
+      jointMarginalDistribution={jointMarginalDistribution}
+      posteriorDistribution={posteriorDistribution}
+      posteriorMarginalDistribution={posteriorMarginalDistribution}
+      hyperDistibution={hyperDistribution}
+      hyperMarginalDistribution={hyperMarginalDistribution}
+      decimals={3}
+    />
+  )
 
   const executeEffects = () => {
     setPrior(formPrior)
     const channelFromInputs = [channel1stEntry, channel2ndEntry, channel3rdEntry]
     setChannel(channelFromInputs)
+    showResults(true)
   }
 
   return (
@@ -74,17 +88,7 @@ export default function Forms() {
           Calculate!
         </Button>
       </FormField>
-
-      <Results
-        priorShannonEntropy={priorShannonEntropy}
-        jointDistribution={jointDistribution}
-        jointMarginalDistribution={jointMarginalDistribution}
-        posteriorDistribution={posteriorDistribution}
-        posteriorMarginalDistribution={posteriorMarginalDistribution}
-        hyperDistibution={hyperDistribution}
-        hyperMarginalDistribution={hyperMarginalDistribution}
-        decimals={3}
-      />
+      {results && resultsComponent}
     </div>
   )
 }

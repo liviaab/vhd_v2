@@ -10,9 +10,9 @@ const Array = ({values, decimals = 3}) => {
   }
 
   return (
-    <div>
-      {values.join('  ')}
-    </div>
+    <pre>
+      {values.join('\t')}
+    </pre>
   )
 }
 

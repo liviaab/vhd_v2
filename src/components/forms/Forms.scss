@@ -1,7 +1,6 @@
 @import '../../assets/stylesheets/colors.scss';
 
 .main_container {
-  background-color: $conch;
   display: flex;
   flex-flow: column;
   width: 100%;
@@ -15,7 +14,8 @@
   width: 30%;
   min-width: 350px;
   margin: 0 auto;
-  padding: 20px 0;
+  padding: 25px;
+  background-color: $conch;
 
   .action_button {
     width: 150px;

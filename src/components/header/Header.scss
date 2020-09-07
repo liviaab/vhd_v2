@@ -1,8 +1,9 @@
 @import '../../assets/stylesheets/colors.scss';
 
 .header_wrapper {
-  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  padding: 2% 0;
 }

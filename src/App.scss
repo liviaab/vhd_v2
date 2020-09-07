@@ -1,8 +1,8 @@
 @import './assets/stylesheets/colors.scss';
 
-.main {
+main {
   display: flex;
-  flex-flow: row;
+  flex-flow: column;
   align-items: center;
   height: 100vh;
 }

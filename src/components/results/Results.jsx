@@ -1,4 +1,5 @@
 import React from 'react'
+import { defaultTheme } from 'evergreen-ui'
 import Array from '../array/Array'
 import Matrix from '../matrix/Matrix'
 import './Results.scss'
@@ -15,8 +16,8 @@ export default function Results({
 }) {
 
   return (
-    <div className="intermediate-calculations">
-      <div> Entropia de Shannon da entrada:
+    <div className="intermediate-calculations" style={{color: defaultTheme.colors.text.default}}>
+      <div> Prior's Shannon Entropy:
         <br/>
         { priorShannonEntropy ? priorShannonEntropy.toFixed(decimals) : null }
       </div>

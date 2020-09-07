@@ -1,44 +1,21 @@
 @import '../../assets/stylesheets/colors.scss';
 
 .main_container {
+  background-color: $conch;
   display: flex;
-  flex-flow: row;
-  background-color: $beryl-green;
-  height: 70vh;
+  flex-flow: column;
+  width: 100%;
+  height: 100%;
 }
 
 .forms_wrapper {
   display: flex;
   flex-flow: column;
   justify-content: center;
-  width: 40%;
+  width: 30%;
   min-width: 350px;
-
-  .input_data_wrapper {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-evenly;
-    align-items: center;
-
-    div {
-      width: 50%;
-      display: flex;
-      flex-flow: column;
-    }
-
-    &__prior {
-      align-items: center;
-    }
-
-    &__channel {
-      align-items: center;
-      justify-content: space-evenly;
-
-      > div:not(:first-child) label span {
-        display: none;
-      }
-    }
-  }
+  margin: 0 auto;
+  padding: 20px 0;
 
   .action_button {
     width: 150px;

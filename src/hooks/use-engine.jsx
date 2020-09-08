@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Channel, Prior } from './'
+import Channel from './use-channel'
+import Prior from './use-prior'
 import {
   columnsOfZeroes,
   columnsOfMultiples,

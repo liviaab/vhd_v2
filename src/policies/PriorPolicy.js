@@ -8,10 +8,6 @@ export const ERROR_MESSAGES = {
   invalidFormat: 'One of the probabilities has the wrong format or there are invalid separators'
 }
 
-const splitProbabilitiesWithoutBlankSpaces = (string) => {
-  return string.split(/(\s+)/).filter( e => e.trim().length > 0)
-}
-
 /*
 * Checks the validity of the prior string
 * @param  {String}  prior             Space delimited sequence of fractions
@@ -81,6 +77,10 @@ function verifyInputQuantity(prior) {
     qttyInputErrorMessages,
     intermediatePrior
   }
+}
+
+const splitProbabilitiesWithoutBlankSpaces = (string) => {
+  return string.split(/(\s+)/).filter( e => e.trim().length > 0)
 }
 
 function verifyFormat(prior) {

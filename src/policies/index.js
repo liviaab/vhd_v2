@@ -1,7 +1,7 @@
-import ChannelPolicy from './ChannelPolicy'
-import PriorPolicy from './PriorPolicy'
+import { checkChannel } from './ChannelPolicy'
+import { checkPrior } from './PriorPolicy'
 
 export {
-  ChannelPolicy,
-  PriorPolicy
+  checkChannel,
+  checkPrior
 }

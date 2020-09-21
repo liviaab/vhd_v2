@@ -20,7 +20,7 @@ export default function Results({
       className="intermediate-calculations"
       style={{color: defaultTheme.colors.text.default}}
     >
-      <p title="Results container"><strong>Results</strong></p>
+      <p title="Calculations' results"><strong>Results</strong></p>
       <br/>
       <div> Prior's Shannon Entropy:
         <br/>

@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react'
 
 const logBase2 = number => Math.log( 1/number ) / Math.log(2)
 
-const splitProbabilitiesWithoutBlankSpaces = (number) => {
-  return number.split(/(\s+)/).filter( e => e.trim().length > 0)
+const splitProbabilitiesWithoutBlankSpaces = (string) => {
+  return string.split(/(\s+)/).filter( e => e.trim().length > 0)
 }
 
 export default function Prior() {

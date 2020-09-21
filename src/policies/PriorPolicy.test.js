@@ -9,19 +9,19 @@ const invalidPriorE = "1/3 1/3 1/3 1/3"
 
 describe('with valid parameters', () => {
   it('does not return error flag or error messages', () => {
-    const { hasErrors, errorMessages, transformedPrior } = checkPrior(validPrior)
+    const { priorHasErrors, priorErrorMessages, transformedPrior } = checkPrior(validPrior)
 
-    expect(hasErrors).toBeFalsy()
-    expect(errorMessages).toEqual([])
+    expect(priorHasErrors).toBeFalsy()
+    expect(priorErrorMessages).toEqual([])
   })
 })
 
 describe('with invalid parameters', () => {
   it('returns error flag and invalid string message', () => {
-    const { hasErrors, errorMessages, transformedPrior } = checkPrior(invalidPriorA)
+    const { priorHasErrors, priorErrorMessages, transformedPrior } = checkPrior(invalidPriorA)
 
-    expect(hasErrors).toBeTruthy()
-    expect(errorMessages).toEqual([
+    expect(priorHasErrors).toBeTruthy()
+    expect(priorErrorMessages).toEqual([
       ERROR_MESSAGES.invalidString,
       ERROR_MESSAGES.minInputs,
       ERROR_MESSAGES.inputSum
@@ -29,37 +29,37 @@ describe('with invalid parameters', () => {
   })
 
   it('returns error flag and invalid format message', () => {
-    const { hasErrors, errorMessages, transformedPrior } = checkPrior(invalidPriorB)
+    const { priorHasErrors, priorErrorMessages, transformedPrior } = checkPrior(invalidPriorB)
 
-    expect(hasErrors).toBeTruthy()
-    expect(errorMessages).toEqual([
+    expect(priorHasErrors).toBeTruthy()
+    expect(priorErrorMessages).toEqual([
       ERROR_MESSAGES.invalidFormat
     ])
   })
 
   it('returns error flag and invalid format message', () => {
-    const { hasErrors, errorMessages, transformedPrior } = checkPrior(invalidPriorC)
+    const { priorHasErrors, priorErrorMessages, transformedPrior } = checkPrior(invalidPriorC)
 
-    expect(hasErrors).toBeTruthy()
-    expect(errorMessages).toEqual([
+    expect(priorHasErrors).toBeTruthy()
+    expect(priorErrorMessages).toEqual([
       ERROR_MESSAGES.invalidFormat
     ])
   })
 
   it('returns error flag and invalid sum message', () => {
-    const { hasErrors, errorMessages, transformedPrior } = checkPrior(invalidPriorD)
+    const { priorHasErrors, priorErrorMessages, transformedPrior } = checkPrior(invalidPriorD)
 
-    expect(hasErrors).toBeTruthy()
-    expect(errorMessages).toEqual([
+    expect(priorHasErrors).toBeTruthy()
+    expect(priorErrorMessages).toEqual([
       ERROR_MESSAGES.inputSum
     ])
   })
 
   it('returns error flag and invalid quantity message', () => {
-    const { hasErrors, errorMessages, transformedPrior } = checkPrior(invalidPriorE)
+    const { priorHasErrors, priorErrorMessages, transformedPrior } = checkPrior(invalidPriorE)
 
-    expect(hasErrors).toBeTruthy()
-    expect(errorMessages).toEqual([
+    expect(priorHasErrors).toBeTruthy()
+    expect(priorErrorMessages).toEqual([
       ERROR_MESSAGES.maxInputs,
       ERROR_MESSAGES.inputSum
     ])

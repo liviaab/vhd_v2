@@ -18,25 +18,25 @@ export const ERROR_MESSAGES = {
 *
 */
 export function checkPrior(prior) {
-  let hasErrors = false
-  let errorMessages = []
+  let priorHasErrors = false
+  let priorErrorMessages = []
 
   const { hasInputError, inputErrorMessage } = verifyInputString(prior)
   const { hasQttyInputError, qttyInputErrorMessages, intermediatePrior } = verifyInputQuantity(prior)
   const { hasFormatError, formatErrorMessages, transformedPrior } = verifyFormat(intermediatePrior)
   const { hasSumError, incorrectSumMessage } = verifySum(transformedPrior)
 
-  hasErrors = hasInputError || hasQttyInputError || hasFormatError || hasSumError
+  priorHasErrors = hasInputError || hasQttyInputError || hasFormatError || hasSumError
 
-  errorMessages = errorMessages
+  priorErrorMessages = priorErrorMessages
     .concat(inputErrorMessage)
     .concat(qttyInputErrorMessages)
     .concat(formatErrorMessages)
     .concat(incorrectSumMessage)
 
   return {
-    hasErrors,
-    errorMessages,
+    priorHasErrors,
+    priorErrorMessages,
     transformedPrior
   }
 }

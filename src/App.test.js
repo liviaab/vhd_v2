@@ -2,14 +2,13 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react';
 import App from './App';
 
-  // const { getByText } = render(<App />);
-  // const linkElement = getByText(/learn react/i);
-  // expect(linkElement).toBeInTheDocument();
+const validValue = "1/3 1/3 1/3"
+const invalidValue = "1/3, 1/3, 1/3"
 
 test('does not show calculations when first rendered', () => {
   const { queryByTitle } = render(<App />)
 
-  expect(queryByTitle('Results')).toBe(null)
+  expect(queryByTitle('Calculations\' results')).toBe(null)
 })
 
 describe("with valid inputs", () => {
@@ -21,12 +20,13 @@ describe("with valid inputs", () => {
       getByText
     } = render(<App />)
 
-    const inputValue = { target: { value: "1/3 1/3 1/3" } }
+    const validEventValue = { target: { value: validValue } }
+
     await act(async () => {
-      fireEvent.change(getByLabelText('Prior'), inputValue)
-      fireEvent.change(getByPlaceholderText('Channel\'s first entry'), inputValue)
-      fireEvent.change(getByPlaceholderText('Channel\'s second entry'), inputValue)
-      fireEvent.change(getByPlaceholderText('Channel\'s third entry'), inputValue)
+      fireEvent.change(getByLabelText('Prior'), validEventValue)
+      fireEvent.change(getByPlaceholderText('Channel\'s first entry'), validEventValue)
+      fireEvent.change(getByPlaceholderText('Channel\'s second entry'), validEventValue)
+      fireEvent.change(getByPlaceholderText('Channel\'s third entry'), validEventValue)
     })
 
     await act(async () => {
@@ -41,10 +41,48 @@ describe("with valid inputs", () => {
 })
 
 describe("with invalid inputs", () => {
-  it.todo('does not calculate if one of the fields are empty')
-  it.todo('does not calculate if the separator is a comma')
-  it.todo('does not calculate if the prior`s sum is different of 1')
+  it('does not calculate if one or more fields are empty', async () => {
+    const {
+      queryByTitle,
+      getByRole
+    } = render(<App />)
+
+    await act(async () => {
+      fireEvent.click(getByRole("button", { name: "Calculate!" }))
+    })
+
+    expect(queryByTitle('Calculations\' results')).toBe(null)
+    expect(getByRole('alert'))
+      .toHaveTextContent('Invalid prior string, You must provide at least one probability, The sum of the input MUST be one')
+  })
+
+  it('does not calculate if the prior separator is a comma', async() => {
+    const {
+      getByLabelText,
+      getByPlaceholderText,
+      getByRole,
+      queryByTitle
+    } = render(<App />)
+
+    const invalidEventValue = { target: { value: invalidValue } }
+    const validEventValue = { target: { value: validValue } }
+
+    await act(async () => {
+      fireEvent.change(getByLabelText('Prior'), invalidEventValue)
+      fireEvent.change(getByPlaceholderText('Channel\'s first entry'), validEventValue)
+      fireEvent.change(getByPlaceholderText('Channel\'s second entry'), validEventValue)
+      fireEvent.change(getByPlaceholderText('Channel\'s third entry'), validEventValue)
+    })
+
+    await act(async () => {
+      fireEvent.click(getByRole("button", { name: "Calculate!" }))
+    })
+
+    expect(queryByTitle('Calculations\' results')).toBe(null)
+    expect(getByRole('alert')).toHaveTextContent('One of the probabilities has the wrong format or there are invalid separators')
+  })
+
   it.todo('does not calculate if the channel column`s sum is different of 1')
-  it.todo('does not calculate if the prior has more than 3 elements')
+  it.todo('does not calculate if the channel`s separator is a comma')
   it.todo('does not calculate if the prior has less than 3 elements')
 })

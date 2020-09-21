@@ -54,6 +54,7 @@ export default function Forms() {
           <div className="input_data_wrapper__prior">
             <TextInputField
               label="Prior"
+              placeholder="Prior values"
               id="prior-input"
               isInvalid={false}
               onChange={e => setFormPrior(e.target.value)}
@@ -62,18 +63,21 @@ export default function Forms() {
           <div className="input_data_wrapper__channel">
             <TextInputField
               label="Channel"
+              placeholder="Channel's first entry"
               id="channel-input-1"
               isInvalid={false}
               onChange={e => setChannel1stEntry(e.target.value)}
             />
             <TextInputField
               label=""
+              placeholder="Channel's second entry"
               id="channel-input-2"
               isInvalid={false}
               onChange={e => setChannel2ndEntry(e.target.value)}
             />
             <TextInputField
               label=""
+              placeholder="Channel's third entry"
               id="channel-input-3"
               isInvalid={false}
               onChange={e => setChannel3rdEntry(e.target.value)}

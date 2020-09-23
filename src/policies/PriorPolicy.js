@@ -1,9 +1,8 @@
-import { add, fraction, number } from 'mathjs'
+import { add, evaluate } from 'mathjs'
 
 export const ERROR_MESSAGES = {
   invalidString: 'Invalid prior string',
-  minInputs: 'You must provide at least one probability',
-  maxInputs: 'The maximum number of inputs is three',
+  quantityOfInputs: 'You must provide three prior probability values',
   inputSum: 'The sum of the input MUST be one',
   invalidFormat: 'One of the probabilities has the wrong format or there are invalid separators'
 }
@@ -12,8 +11,8 @@ export const ERROR_MESSAGES = {
 * Checks the validity of the prior string
 * @param  {String}  prior             Space delimited sequence of fractions
 *
-* @return {Objetc}  hasErrors         If the string fails one or more validations
-*                   errorMessages     Error messages related to the validations
+* @return {Objetc}  priorHasErrors         If the string fails one or more validations
+*                   priorErrorMessages     Error messages related to the validations
 *                   transformedPrior  The string has to be transformed to go through the validations. Some may consider a side-effect.
 *
 */
@@ -22,7 +21,7 @@ export function checkPrior(prior) {
   let priorErrorMessages = []
 
   const { hasInputError, inputErrorMessage } = verifyInputString(prior)
-  const { hasQttyInputError, qttyInputErrorMessages, intermediatePrior } = verifyInputQuantity(prior)
+  const { hasQttyInputError, qttyInputErrorMessage, intermediatePrior } = verifyInputQuantity(prior)
   const { hasFormatError, formatErrorMessages, transformedPrior } = verifyFormat(intermediatePrior)
   const { hasSumError, incorrectSumMessage } = verifySum(transformedPrior)
 
@@ -30,7 +29,7 @@ export function checkPrior(prior) {
 
   priorErrorMessages = priorErrorMessages
     .concat(inputErrorMessage)
-    .concat(qttyInputErrorMessages)
+    .concat(qttyInputErrorMessage)
     .concat(formatErrorMessages)
     .concat(incorrectSumMessage)
 
@@ -58,23 +57,18 @@ function verifyInputString(prior) {
 
 function verifyInputQuantity(prior) {
   let hasQttyInputError = false
-  let qttyInputErrorMessages = []
+  let qttyInputErrorMessage = []
 
   const intermediatePrior = splitProbabilitiesWithoutBlankSpaces(prior)
 
-  if (intermediatePrior.length === 0) {
+  if (intermediatePrior.length !== 3) {
     hasQttyInputError = true
-    qttyInputErrorMessages.push(ERROR_MESSAGES.minInputs)
-  }
-
-  if (intermediatePrior.length > 3) {
-    hasQttyInputError = true
-    qttyInputErrorMessages.push(ERROR_MESSAGES.maxInputs)
+    qttyInputErrorMessage.push(ERROR_MESSAGES.quantityOfInputs)
   }
 
   return {
     hasQttyInputError,
-    qttyInputErrorMessages,
+    qttyInputErrorMessage,
     intermediatePrior
   }
 }
@@ -89,16 +83,16 @@ function verifyFormat(prior) {
   let transformedPrior = prior
 
   try {
-    transformedPrior = prior.map(number => fraction(number))
+    transformedPrior = prior.map(number => evaluate(number))
 
     if(transformedPrior.length !== prior.length) {
       hasFormatError = true
-      formatErrorMessages.push(ERROR_MESSAGES.invalidFormat)
     }
   } catch {
     hasFormatError = true
-    formatErrorMessages.push(ERROR_MESSAGES.invalidFormat)
   } finally {
+    hasFormatError && formatErrorMessages.push(ERROR_MESSAGES.invalidFormat)
+
     return {
       hasFormatError,
       formatErrorMessages,
@@ -113,20 +107,16 @@ function verifySum(prior) {
   let sum = 0;
 
   try {
-    if (prior.length === 0) {
-      hasSumError = true
-      incorrectSumMessage.push(ERROR_MESSAGES.inputSum)
-    } else {
-      sum = number(prior.reduce((acc, current) => add(acc, current)))
+    sum = prior.reduce((acc, current) => add(acc, current))
 
-      if(sum !== 1) {
-        hasSumError = true
-        incorrectSumMessage.push(ERROR_MESSAGES.inputSum)
-      }
+    if(sum !== 1) {
+      hasSumError = true
     }
   } catch (e) {
-    // Invalid format error already informed
+    hasSumError = true
   }
+
+  hasSumError && incorrectSumMessage.push(ERROR_MESSAGES.inputSum)
 
   return {
     hasSumError,

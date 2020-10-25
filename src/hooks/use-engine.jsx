@@ -29,8 +29,8 @@ const calculateMatrixDistribution = (matrix) => {
 }
 
 export default function Engine() {
-  const [ setChannelString, channelProbabilities ] = Channel()
-  const [ setPriorString, priorProbabilities, priorShannonEntropy ] = Prior()
+  const [ setChannel, channelProbabilities ] = Channel()
+  const [ priorProbabilities, setPriorProbabilities, priorShannonEntropy ] = Prior()
 
   const [ jointDistribution, setJointDistribution ] = useState([])
   const [ jointMarginalDistribution, setJointMarginalDistribution ] = useState([])
@@ -41,12 +41,8 @@ export default function Engine() {
 
   // Calculate Joint Distribution
   useEffect(() => {
-    if(priorProbabilities && priorProbabilities.length !== 0
-        && channelProbabilities && channelProbabilities.length !== 0
-        && !hasInvalidValues(channelProbabilities)) {
-      const jointDistribution = multiply(priorProbabilities, channelProbabilities)
-      setJointDistribution(jointDistribution)
-    }
+    const jointDistribution = multiply(priorProbabilities, channelProbabilities)
+    setJointDistribution(jointDistribution)
   }, [priorProbabilities, channelProbabilities])
 
   // Calculate Marginal Distribution
@@ -110,8 +106,8 @@ export default function Engine() {
   }, [hyperDistribution])
 
   return [
-    setPriorString,
-    setChannelString,
+    setPriorProbabilities,
+    setChannel,
     priorShannonEntropy,
     jointDistribution,
     jointMarginalDistribution,

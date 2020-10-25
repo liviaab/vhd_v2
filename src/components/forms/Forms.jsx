@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Button, FormField, TextInputField } from 'evergreen-ui'
+import { checkPrior, checkChannel } from '../../policies'
 import { Engine } from '../../hooks'
 import Results from '../results/Results'
 import './Forms.scss'
 
-// 1/3 1/3 1/3
 export default function Forms() {
   const [formPrior, setFormPrior] = useState('')
   const [channel1stEntry, setChannel1stEntry] = useState('')
@@ -21,6 +21,7 @@ export default function Forms() {
     hyperDistribution,
     hyperMarginalDistribution
   ] = Engine()
+  const [validationMessage, setValidationMessage] = useState(null)
   const [results, showResults] = useState(false)
 
   const resultsComponent = (
@@ -36,11 +37,26 @@ export default function Forms() {
     />
   )
 
-  const executeEffects = () => {
-    setPrior(formPrior)
-    const channelFromInputs = [channel1stEntry, channel2ndEntry, channel3rdEntry]
-    setChannel(channelFromInputs)
-    showResults(true)
+  const executeActions = () => {
+    const channel = [channel1stEntry, channel2ndEntry, channel3rdEntry]
+
+    const { priorHasErrors, priorErrorMessages, transformedPrior } = checkPrior(formPrior)
+    const { channelHasErrors, channelErrorMessages, transformedChannel } = checkChannel(channel)
+
+    if(!priorHasErrors && !channelHasErrors) {
+      setValidationMessage(null)
+      setPrior(transformedPrior)
+      setChannel(transformedChannel)
+      showResults(true)
+      return
+    }
+
+    const errors = priorErrorMessages
+                    .concat(channelErrorMessages)
+                    .join(", ")
+
+    setValidationMessage(errors)
+    showResults(false)
   }
 
   return (
@@ -49,11 +65,13 @@ export default function Forms() {
         className="forms_wrapper"
         label=""
         hint="Use numbers (0 or 1) or fractions (e.g. 1/3, 1/7, 1/2...) separated by spaces"
+        validationMessage={validationMessage}
       >
         <div className="input_data_wrapper">
           <div className="input_data_wrapper__prior">
             <TextInputField
               label="Prior"
+              placeholder="Prior values"
               id="prior-input"
               isInvalid={false}
               onChange={e => setFormPrior(e.target.value)}
@@ -62,18 +80,21 @@ export default function Forms() {
           <div className="input_data_wrapper__channel">
             <TextInputField
               label="Channel"
+              placeholder="Channel's first entry"
               id="channel-input-1"
               isInvalid={false}
               onChange={e => setChannel1stEntry(e.target.value)}
             />
             <TextInputField
               label=""
+              placeholder="Channel's second entry"
               id="channel-input-2"
               isInvalid={false}
               onChange={e => setChannel2ndEntry(e.target.value)}
             />
             <TextInputField
               label=""
+              placeholder="Channel's third entry"
               id="channel-input-3"
               isInvalid={false}
               onChange={e => setChannel3rdEntry(e.target.value)}
@@ -83,7 +104,7 @@ export default function Forms() {
         <Button
           height={32}
           className="action_button"
-          onClick={executeEffects}
+          onClick={executeActions}
         >
           Calculate!
         </Button>

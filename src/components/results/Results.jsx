@@ -16,7 +16,12 @@ export default function Results({
 }) {
 
   return (
-    <div className="intermediate-calculations" style={{color: defaultTheme.colors.text.default}}>
+    <div
+      className="intermediate-calculations"
+      style={{color: defaultTheme.colors.text.default}}
+    >
+      <p title="Calculations' results"><strong>Results</strong></p>
+      <br/>
       <div> Prior's Shannon Entropy:
         <br/>
         <pre>{ priorShannonEntropy ? priorShannonEntropy.toFixed(decimals) : null }</pre>

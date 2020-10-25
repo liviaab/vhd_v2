@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, FormField, TextInputField } from 'evergreen-ui'
-import { checkPrior } from '../../policies'
+import { checkPrior, checkChannel } from '../../policies'
 import { Engine } from '../../hooks'
 import Results from '../results/Results'
 import './Forms.scss'
@@ -41,19 +41,20 @@ export default function Forms() {
     const channel = [channel1stEntry, channel2ndEntry, channel3rdEntry]
 
     const { priorHasErrors, priorErrorMessages, transformedPrior } = checkPrior(formPrior)
-    // const { channelHasErrors, channelErrorMessages } = ChannelPolicy.check(channel)
+    const { channelHasErrors, channelErrorMessages, transformedChannel } = checkChannel(channel)
 
-    if(!priorHasErrors) {
+    if(!priorHasErrors && !channelHasErrors) {
       setValidationMessage(null)
-      setPrior(formPrior)
-      setChannel(channel)
+      setPrior(transformedPrior)
+      setChannel(transformedChannel)
       showResults(true)
       return
     }
 
     const errors = priorErrorMessages
-                    // .concat(channelErrorMessages)
+                    .concat(channelErrorMessages)
                     .join(", ")
+
     setValidationMessage(errors)
     showResults(false)
   }
